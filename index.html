@@ -85,9 +85,32 @@
   footer { padding: 56px 0 40px; text-align: center; color: var(--muted); font-size: 14px; }
   .enjoy { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
   code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--soft); padding: 2px 6px; border-radius: 6px; }
+
+  /* parallax sky: fixed layers that move slower than the page */
+  :root { --star: rgba(50,108,229,.35); --star2: rgba(120,140,200,.30); --glow: rgba(50,108,229,.16); --glow2: rgba(168,85,247,.10); }
+  @media (prefers-color-scheme: dark) { :root { --star: rgba(210,225,255,.55); --star2: rgba(160,180,255,.35); --glow: rgba(91,140,255,.22); --glow2: rgba(168,85,247,.16); } }
+  .sky { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  .sky .layer { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+  .sky .glow { height: 120vh;
+    background: radial-gradient(60% 45% at 50% 18%, var(--glow), transparent 70%),
+                radial-gradient(35% 30% at 78% 8%, var(--glow2), transparent 70%),
+                radial-gradient(30% 25% at 18% 30%, var(--glow2), transparent 70%); }
+  .sky .stars { height: calc(100vh + 600px); background-size: 300px 300px;
+    background-image:
+      radial-gradient(1.2px 1.2px at 23px 41px, var(--star), transparent 2px),
+      radial-gradient(1px 1px at 141px 97px, var(--star2), transparent 2px),
+      radial-gradient(1.4px 1.4px at 251px 19px, var(--star), transparent 2px),
+      radial-gradient(1px 1px at 77px 211px, var(--star2), transparent 2px),
+      radial-gradient(1.2px 1.2px at 199px 263px, var(--star), transparent 2px),
+      radial-gradient(1px 1px at 287px 167px, var(--star2), transparent 2px); }
+  .sky .stars.far { background-size: 180px 180px; opacity: .6; }
+  .sky .stars.near { -webkit-mask-image: linear-gradient(#000 0, #000 55%, transparent 95%); mask-image: linear-gradient(#000 0, #000 55%, transparent 95%); }
+  [data-drift] { will-change: transform; }
+  @media (prefers-reduced-motion: reduce) { .sky .layer, [data-drift] { transform: none !important; will-change: auto; } }
 </style>
 </head>
 <body>
+<div class="sky" aria-hidden="true"><div class="layer glow"></div><div class="layer stars far"></div><div class="layer stars near"></div></div>
 <div class="wrap">
   <header class="top">
     <a class="brand" href="#">
@@ -113,7 +136,7 @@
   <main>
     <div class="hero">
       <svg class="buddy" viewBox="0 0 100 116" role="img" aria-label="The k8s-buddy mascot"><use href="#buddy"/></svg>
-      <h1>A little friend that watches<br>your Kubernetes clusters</h1>
+      <h1>A little friend that watches <br>your Kubernetes clusters</h1>
       <p class="lead">k8s-buddy floats on your desktop and sits in your menu bar, keeping an eye on <strong>every context in your kubeconfig</strong>. When something breaks, it nudges you and shows you exactly what's wrong.</p>
       <div class="free">Free for everyone. Enjoy! 🎉</div>
       <div class="ctas">
@@ -121,7 +144,7 @@
         <a class="btn" href="https://github.com/dlebee/k8s-buddy">★ View the source</a>
       </div>
       <p class="small">macOS · Windows · Linux &nbsp;·&nbsp; open source (Apache 2.0) &nbsp;·&nbsp; no account, no telemetry</p>
-      <div class="shot">
+      <div class="shot" data-drift="0.05">
         <picture>
           <source srcset="img/overview-dark.jpg" media="(prefers-color-scheme: dark)">
           <img src="img/overview.jpg" width="1800" height="1125" alt="The k8s-buddy overview: 22 clusters monitored, and a list of things that need a look, most important first.">
@@ -155,7 +178,7 @@
             <li>Alerts show up right on the map</li>
           </ul>
         </div>
-        <div class="shot"><img src="img/exposure.jpg" width="1800" height="1125" loading="lazy" alt="The exposure galaxy: each cluster drawn as a star system with its entry points, ingresses and pods, and alert badges."></div>
+        <div class="shot" data-drift="0.05"><img src="img/exposure.jpg" width="1800" height="1125" loading="lazy" alt="The exposure galaxy: each cluster drawn as a star system with its entry points, ingresses and pods, and alert badges."></div>
       </div>
 
       <div class="feature flip">
@@ -168,7 +191,7 @@
             <li>Secret values are never downloaded unless you reveal a key</li>
           </ul>
         </div>
-        <div class="shot"><img src="img/drawer.jpg" width="1800" height="1125" loading="lazy" alt="A pod opened in k8s-buddy with its status, container, live CPU and memory usage bars, conditions and labels."></div>
+        <div class="shot" data-drift="0.05"><img src="img/drawer.jpg" width="1800" height="1125" loading="lazy" alt="A pod opened in k8s-buddy with its status, container, live CPU and memory usage bars, conditions and labels."></div>
       </div>
 
       <div class="feature">
@@ -182,7 +205,7 @@
             <li>Orphaned volumes, leftover pods, versions near end-of-life</li>
           </ul>
         </div>
-        <div class="shot"><img src="img/doctor.jpg" width="1800" height="1125" loading="lazy" alt="The Doctor view listing findings such as LoadBalancers with no pods and broken ingress backends."></div>
+        <div class="shot" data-drift="0.05"><img src="img/doctor.jpg" width="1800" height="1125" loading="lazy" alt="The Doctor view listing findings such as LoadBalancers with no pods and broken ingress backends."></div>
       </div>
 
       <div class="feature flip">
@@ -190,7 +213,7 @@
           <h3>⏰ CronJobs you can read</h3>
           <p>Every schedule in plain English, with the next five runs in your time zone and UTC, plus recent history and the concurrency policy.</p>
         </div>
-        <div class="shot"><img src="img/cron.jpg" width="1800" height="1125" loading="lazy" alt="A CronJob opened in k8s-buddy: schedule */15 explained as 'Every 15 minutes' with the next five runs in local time and UTC."></div>
+        <div class="shot" data-drift="0.05"><img src="img/cron.jpg" width="1800" height="1125" loading="lazy" alt="A CronJob opened in k8s-buddy: schedule */15 explained as 'Every 15 minutes' with the next five runs in local time and UTC."></div>
       </div>
     </section>
     <p class="small" style="text-align:center">Screenshots show demo clusters with sample apps.</p>
@@ -223,5 +246,32 @@
     <p>Kubernetes is a registered trademark of The Linux Foundation. k8s-buddy is an independent project.</p>
   </footer>
 </div>
+<script>
+(() => {
+  const mq = matchMedia('(prefers-reduced-motion: reduce)');
+  const glow = document.querySelector('.sky .glow'), far = document.querySelector('.sky .far'), near = document.querySelector('.sky .near');
+  const drifters = [...document.querySelectorAll('[data-drift]')];
+  let ticking = false;
+  function frame() {
+    ticking = false;
+    if (mq.matches) return;
+    const y = scrollY, vh = innerHeight, k = innerWidth < 700 ? 0.5 : 1;
+    glow.style.transform = `translate3d(0,${(-y * 0.25).toFixed(1)}px,0)`;
+    far.style.transform = `translate3d(0,${(-(y * 0.08) % 180).toFixed(1)}px,0)`;
+    near.style.transform = `translate3d(0,${(-(y * 0.2) % 300).toFixed(1)}px,0)`;
+    for (const el of drifters) {
+      const r = el.parentElement.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) continue;
+      const off = (r.top + r.height / 2 - vh / 2) * parseFloat(el.dataset.drift) * k;
+      el.style.transform = `translate3d(0,${Math.max(-40, Math.min(40, off)).toFixed(1)}px,0)`;
+    }
+  }
+  const req = () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', req, { passive: true });
+  mq.addEventListener?.('change', () => { if (mq.matches) document.querySelectorAll('.sky .layer,[data-drift]').forEach((e) => (e.style.transform = '')); else req(); });
+  req();
+})();
+</script>
 </body>
 </html>
